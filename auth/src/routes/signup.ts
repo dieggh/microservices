@@ -29,7 +29,7 @@ async (req: Request, res: Response  )  =>{
     });
 
     if(existingUser){
-        console.log("user exits");
+        
         throw new BadRequestError('Email in use');
     }
 
