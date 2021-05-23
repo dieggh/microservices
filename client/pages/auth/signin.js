@@ -2,12 +2,12 @@ import { useState } from 'react';
 import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
 
-export default function SignUp() {
+export default function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     
     const { doRequest, errors } = useRequest({
-        url: '/users/signup',
+        url: '/users/signin',
         method: 'POST',
         body: {
             email, password
@@ -30,7 +30,7 @@ export default function SignUp() {
     }
 
     return <form onSubmit={onSubmit}>
-        <h1>Sign UP</h1>
+        <h1>Sign IN</h1>
         <div className="form-group">
             <label>Email Address</label>
             <input value={email} className="form-control" onChange={e => setEmail(e.target.value)} type="text" />
@@ -43,7 +43,7 @@ export default function SignUp() {
             {errors}
         
         <div>
-            <button type="submit" className="btn btn-sm btn-info">Sign UP</button>
+            <button type="submit" className="btn btn-sm btn-info">Sign IN</button>
         </div>
         
     </form>
