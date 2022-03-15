@@ -1,53 +1,35 @@
-import { useState } from 'react'
-import { fetchAux } from '../helpers/fetchAux';
+import axios from 'axios';
+import { useState } from 'react';
 
-const UseRequest = ({ url, method, body, onSuccess }) => {
-    const [errors, setErrors] = useState(null);
+const useRequest = ({ url, method, body, onSuccess }) => {
+  const [errors, setErrors] = useState(null);
 
-    const doRequest = async () => {
+  const doRequest = async () => {
+    try {
+      setErrors(null);
+      const response = await axios[method](url, body);
+      if (onSuccess) {
+        console.log("entre");
+        onSuccess(response.data);
+      }
 
-        try {
-            
-            setErrors(null);
-
-            const resp = await fetchAux(url, body, method);
-            const data = await resp.json();
-
-            if (data.errors) {
-                setErrors(
-                
-                <div className="alert alert-danger">
-                    <h4>Ooops...</h4>
-                    <ul className="my-0">
-                        {
-                            data.errors.map(error => <li key={error.field}> {error.message} </li>)
-                        }
-                    </ul>
-                </div>
-
-                );
-            }else{
-                onSuccess(data);
-            }
-        } catch (error) {
-            setErrors(
-            <div className="alert alert-danger">
-                <h4>Ooops...</h4>
-                <ul className="my-0">
-                    {
-                       <li key={"all"}> Server Error </li>
-                    }
-                </ul>
-            </div>
-        )
-        }
-
-    };
-
-    return {
-        doRequest,
-        errors
+      return response.data;
+    } catch (err) {
+      console.log(err);
+      setErrors(
+        <div className="alert alert-danger">
+          <h4>Ooops....</h4>
+          <ul className="my-0">
+            {err.response?.data?.errors?.map(err => (
+              <li key={err.message}>{err.message}</li>
+            ))}
+          </ul>
+        </div>
+      );
     }
-}
+  };
 
-export default UseRequest;
+  return { doRequest, errors };
+};
+
+export default useRequest;

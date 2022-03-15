@@ -1,7 +1,9 @@
 import { requireAuth, validateRequest } from "@diegodmicroserv/common";
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
+import { TicketCreatedPublisher } from "../events/publishers/ticket-created-publisher";
 import { Ticket } from "../models/ticket";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -23,6 +25,12 @@ router.post('/api/tickets', requireAuth, [
             userId: req.currentUser!.id
         })
         await ticket.save();
+        new TicketCreatedPublisher(natsWrapper.client).publish({
+            id: ticket.id,
+            title: ticket.title,
+            userId: ticket.userId,
+            price: ticket.price,
+        });
         return res.status(201).send(ticket);
     })
 

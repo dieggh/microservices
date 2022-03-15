@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import { fetchAux } from '../helpers/fetchAux';
 import Header from '../components/header';
+import buildClient from '../api/build-client';
 
 export const AppComponent = ({ Component, pageProps, currentUser }) =>{
     console.log(currentUser)
@@ -12,19 +12,15 @@ export const AppComponent = ({ Component, pageProps, currentUser }) =>{
 
 AppComponent.getInitialProps = async  appContext => {
     try {
-        
-        
-        const resp = await fetchAux('/users/currentuser', null, 'GET', appContext.ctx);
-
-        //console.log(await resp.text())
-        const { currentUser } = await resp.json();
-
+        const client = buildClient(appContext.ctx);
+        const { data: { currentUser }} = await client.get('/api/users/currentuser');
+        console.log("current user", currentUser);
         return {
             currentUser
         };
-        
+
     } catch (error) {
-        console.log(error)
+        console.log("hey", error)
         console.log("entreee")
         return {
             currentUser: null

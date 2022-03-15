@@ -4,13 +4,13 @@ import mongoose from 'mongoose';
 //that are required to create a new Ticket
 interface TicketAttrs {
     title: string;
-    price: string;
+    price: number;
     userId: string;
 }
 //interface that describes propierties that a Ticket document has
 interface TicketDoc extends mongoose.Document {
     title: string;
-    price: string;
+    price: number;
     userId: string;
 }
 

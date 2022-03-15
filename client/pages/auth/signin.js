@@ -7,8 +7,8 @@ export default function SignIn() {
     const [password, setPassword] = useState("");
     
     const { doRequest, errors } = useRequest({
-        url: '/users/signin',
-        method: 'POST',
+        url: '/api/users/signin',
+        method: 'post',
         body: {
             email, password
         },
