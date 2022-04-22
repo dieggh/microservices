@@ -18,7 +18,6 @@ beforeAll(async () => {
     process.env.JWT_KEY = "jijijijij";
     mongo = new MongoMemoryServer();
     const mongoUri = await mongo.getUri();
-    console.log(mongoUri)
     try {
         await mongoose.connect(mongoUri, {
             useNewUrlParser: true,

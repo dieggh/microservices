@@ -1,8 +1,10 @@
 import express, { Request, Response } from 'express';
-import { BadRequestError, NotFoundError, OrderStatus, requireAuth, validateRequest } from '@diegodmicroserv/common';
+import { BadRequestError, NotFoundError, requireAuth, validateRequest } from '@diegodmicroserv/common';
 import { body } from 'express-validator';
 import { Ticket } from '../models/ticket';
-import { Order } from '../models/order';
+import { Order, OrderStatus } from '../models/order';
+import { OrderCreatedPublisher } from '../events/publishers/order-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -19,7 +21,7 @@ router.post('/api/orders', requireAuth, [
     if (!ticket) {
         throw new NotFoundError();
     }
-    const isReserved = await Ticket.isReserved();
+    const isReserved = await ticket.isReserved();
     if (isReserved) {
         throw new BadRequestError('Ticket is already reserved');
     }
@@ -33,6 +35,18 @@ router.post('/api/orders', requireAuth, [
         ticket: ticket
     });
     await order.save();
+
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+        id: order.id,
+        status: order.status,
+        userId: order.userId,
+        expiresAt: order.expiresAt.toISOString(),
+        ticket: {
+            id: order.ticket.id,
+            price: order.ticket.price
+        }
+    });
+
     res.status(201).send(order);
 })
 
