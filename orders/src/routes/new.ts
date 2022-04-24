@@ -32,7 +32,7 @@ router.post('/api/orders', requireAuth, [
         userId: req.currentUser!.id,
         status: OrderStatus.Created,
         expiresAt: expiration,
-        ticket: ticket
+        ticket: ticket,
     });
     await order.save();
 
@@ -44,7 +44,8 @@ router.post('/api/orders', requireAuth, [
         ticket: {
             id: order.ticket.id,
             price: order.ticket.price
-        }
+        },
+        version: order.version,
     });
 
     res.status(201).send(order);
