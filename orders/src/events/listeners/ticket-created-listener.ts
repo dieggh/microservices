@@ -1,6 +1,5 @@
-import { Subjects, TicketCreatedEvent } from '@diegodmicroserv/common';
-import Listener from '@diegodmicroserv/common/build/events/base-listener';
-import { Message, SubscriptionOptions } from 'node-nats-streaming';
+import { Listener, Subjects, TicketCreatedEvent } from '@diegodmicroserv/common';
+import { Message } from 'node-nats-streaming';
 import { Ticket } from '../../models/ticket';
 import { queueGroupName } from './quote-group-name';
 

@@ -27,8 +27,6 @@ it('creates and save a ticket', async () => {
     const ticket = await Ticket.findById(data.id);
     expect(ticket).toBeDefined();
     expect(ticket!.title).toBe(data.title);
-
-
 });
 
 it('acks an event', async () => {

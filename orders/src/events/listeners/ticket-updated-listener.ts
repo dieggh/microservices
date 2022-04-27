@@ -1,5 +1,4 @@
-import { NotFoundError, Subjects, TicketUpdatedEvent } from '@diegodmicroserv/common';
-import Listener from '@diegodmicroserv/common/build/events/base-listener';
+import { Listener, NotFoundError, Subjects, TicketUpdatedEvent } from '@diegodmicroserv/common';
 import { Message } from 'node-nats-streaming';
 import { Ticket } from '../../models/ticket';
 import { queueGroupName } from './quote-group-name';

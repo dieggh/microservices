@@ -14,10 +14,10 @@ interface TicketDoc extends mongoose.Document {
     price: number;
     userId: string;
     version: number;
+    orderId?: string;
 }
 
-
-//an interfaxe that describe the propierties that the Ticket model has
+//an interface that describe the propierties that the Ticket model has
 interface TicketModel extends mongoose.Model<TicketDoc> {
     build(attrs: TicketAttrs): TicketDoc;
 }
@@ -34,6 +34,9 @@ const TicketSchema = new mongoose.Schema({
     userId:{
         type: String,
         required: true
+    },
+    orderId: {
+        type: String
     }
 },{
     toJSON: {
