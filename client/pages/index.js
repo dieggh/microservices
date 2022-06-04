@@ -1,28 +1,41 @@
-import buildClient from '../api/build-client';
+import Link from 'next/link'
 
-export const LandingPage = ( { currentUser } ) => {
-    console.log(currentUser)
-    return currentUser ? (
-        <h1> you are sign in </h1> ) : (
-            <h1>You are not sign in</h1>
-        )
-}
-
-export async function getServerSideProps( context ) {
-
-    try {
-        const client = buildClient(context);
-        const { data: currentUser } = await client.get('/api/users/currentuser');
-        console.log(currentUser)
-        return {
-            props: { currentUser }, // will be passed to the page component as props
-        }
-    } catch (error) {
-        console.log("entreee al error", error)
-        return {
-            props: { currentUser: null }, // will be passed to the page component as props
-        }
-    }
-}
-
-export default LandingPage;
+const LandingPage = ({ currentUser, tickets }) => {
+    const ticketList = tickets.map((ticket) => {
+      return (
+        <tr key={ticket.id}>
+          <td>{ticket.title}</td>
+          <td>{ticket.price}</td>
+          <td>
+            <Link href="/tickets/[ticketId]" as={`/tickets/${ticket.id}`}>
+              <a>View</a>
+            </Link>
+          </td>
+        </tr>
+      );
+    });
+  
+    return (
+      <div>
+        <h1>Tickets</h1>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>{ticketList}</tbody>
+        </table>
+      </div>
+    );
+  };
+  
+  LandingPage.getInitialProps = async (context, client, currentUser) => {
+    const { data } = await client.get('/api/tickets');
+  
+    return { tickets: data };
+  };
+  
+  export default LandingPage;
+  
